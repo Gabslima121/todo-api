@@ -26,7 +26,11 @@ export class UserController {
   public async createUser(
     @Body() { email, name, password }: ICreateUserDto,
   ): Promise<User> {
-    return await this.userService.createUser({ email, name, password });
+    try {
+      return await this.userService.createUser({ email, name, password });
+    } catch (e) {
+      return e.message;
+    }
   }
 
   @Get()

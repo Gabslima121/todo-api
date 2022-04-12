@@ -18,6 +18,13 @@ class UserService {
     });
   }
 
+  public getUserByEmail(email: string): Promise<User> {
+    return this.userRepository.findOne({
+      where: { email },
+      select: ['id', 'name', 'email', 'isDeleted'],
+    });
+  }
+
   public async createUser({
     email,
     name,
@@ -27,6 +34,12 @@ class UserService {
 
     const hashedPassword = await hash(password, 10);
 
+    const userExists = await this.getUserByEmail(email);
+
+    if (userExists) {
+      throw new Error('User already exists');
+    }
+
     user.email = email;
     user.name = name;
     user.password = hashedPassword;
@@ -35,9 +48,9 @@ class UserService {
   }
 
   public getAllUsers(): Promise<User[]> {
-    return this.userRepository.find();
-    // select: ['id', 'name', 'email', 'isDeleted'],
-    // ();
+    return this.userRepository.find({
+      select: ['id', 'name', 'email', 'isDeleted'],
+    });
   }
 }
 
