@@ -24,10 +24,22 @@ export class UserController {
 
   @Post('/create')
   public async createUser(
-    @Body() { email, name, password }: ICreateUserDto,
+    @Body() { email, name, password, role, avatar }: ICreateUserDto,
   ): Promise<User> {
     try {
-      return await this.userService.createUser({ email, name, password });
+      await this.userService.checkIfUserExists(email);
+
+      if (role === ' ' || avatar === ' ') {
+        return await this.userService.createUser({ email, name, password });
+      }
+
+      return await this.userService.createUser({
+        email,
+        name,
+        password,
+        role,
+        avatar,
+      });
     } catch (e) {
       return e.message;
     }

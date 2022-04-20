@@ -24,6 +24,12 @@ class User {
   @Column({ type: 'varchar', length: 120 })
   public password: string;
 
+  @Column({ type: 'varchar', default: 'user' })
+  public role: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  public avatar: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   public createdAt!: Date;
 

@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 class ICreateUserDto {
   @IsString()
@@ -10,6 +10,14 @@ class ICreateUserDto {
 
   @IsString()
   public password: string;
+
+  @IsString()
+  @IsOptional()
+  public role?: string;
+
+  @IsString()
+  @IsOptional()
+  public avatar?: string;
 }
 
 export { ICreateUserDto };
