@@ -11,6 +11,8 @@ class UserService {
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
 
+  public async login(email: string, password: string): Promise<User> {}
+
   public getUserById(id: string): Promise<User> {
     return this.userRepository.findOne({
       where: { id },
