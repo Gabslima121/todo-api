@@ -3,9 +3,11 @@ import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 class ICreateUserDto {
   @IsString()
   @IsNotEmpty()
+  @IsOptional()
   public name: string;
 
   @IsEmail()
+  @IsOptional()
   public email: string;
 
   @IsString()

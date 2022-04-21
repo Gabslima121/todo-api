@@ -1,17 +1,58 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { hash } from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 
 import { ICreateUserDto } from './user.dto';
 import { User } from './user.entity';
+import { sign } from 'jsonwebtoken';
+
+interface IAuthenticateService {
+  email: string;
+  password: string;
+}
+
+interface IResponse {
+  token: string;
+  user: {
+    name: string;
+    role: string;
+    email: string;
+    isDelete: boolean;
+  };
+}
 
 @Injectable()
 class UserService {
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
 
-  public async login(email: string, password: string): Promise<User> {}
+  public async login({ email, password }: IAuthenticateService) {
+    const user = await this.getUserByEmail(email);
+
+    const passwordMarch = await compare(password, user.password);
+
+    if (!user || !passwordMarch) {
+      throw new Error('Email/Password Incorrect');
+    }
+
+    const token = sign({}, process.env.JWT_SECRET, {
+      subject: user.id,
+      expiresIn: '1d',
+    });
+
+    const returnToken: IResponse = {
+      token,
+      user: {
+        name: user.name,
+        role: user.role,
+        email: user.email,
+        isDelete: user.isDeleted,
+      },
+    };
+
+    return returnToken;
+  }
 
   public getUserById(id: string): Promise<User> {
     return this.userRepository.findOne({
@@ -23,18 +64,16 @@ class UserService {
   public getUserByEmail(email: string): Promise<User> {
     return this.userRepository.findOne({
       where: { email },
-      select: ['id', 'name', 'email', 'isDeleted', 'role', 'avatar'],
+      select: [
+        'id',
+        'name',
+        'email',
+        'isDeleted',
+        'role',
+        'avatar',
+        'password',
+      ],
     });
-  }
-
-  public async checkIfUserExists(email: string): Promise<void> {
-    const userExists = await this.getUserByEmail(email);
-
-    if (userExists) {
-      throw new Error('User already exists');
-    }
-
-    return;
   }
 
   public async createUser({
@@ -47,6 +86,12 @@ class UserService {
     const user: User = new User();
 
     const hashedPassword = await hash(password, 10);
+
+    const userExists = await this.getUserByEmail(email);
+
+    if (userExists) {
+      throw new Error('User already exists');
+    }
 
     user.email = email;
     user.name = name;

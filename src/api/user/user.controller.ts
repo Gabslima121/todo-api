@@ -27,8 +27,6 @@ export class UserController {
     @Body() { email, name, password, role, avatar }: ICreateUserDto,
   ): Promise<User> {
     try {
-      await this.userService.checkIfUserExists(email);
-
       if (role === ' ' || avatar === ' ') {
         return await this.userService.createUser({ email, name, password });
       }
@@ -48,5 +46,14 @@ export class UserController {
   @Get()
   public getAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers();
+  }
+
+  @Post('/login')
+  public async login(@Body() { email, password }: ICreateUserDto) {
+    try {
+      return await this.userService.login({ email, password });
+    } catch (e) {
+      return e.message;
+    }
   }
 }
