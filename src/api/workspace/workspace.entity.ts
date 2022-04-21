@@ -1,14 +1,18 @@
 import {
-  Entity,
-  PrimaryColumn,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { v4 as uuid } from 'uuid';
+import { User } from '../user/user.entity';
 
-@Entity('users')
-class User {
+@Entity('workspaces')
+class Workspace {
   @PrimaryColumn()
   public id!: string;
 
@@ -16,25 +20,23 @@ class User {
   public name: string;
 
   @Column({ type: 'varchar', length: 120 })
-  public email: string;
+  public description: string;
 
-  @Column({ type: 'boolean', default: false, name: 'is_deleted' })
-  public isDeleted: boolean;
+  @Column({ type: 'varchar', name: 'owner_id' })
+  public ownerId: string;
 
-  @Column({ type: 'varchar', length: 120 })
-  public password: string;
-
-  @Column({ type: 'varchar', default: 'user' })
-  public role: string;
-
-  @Column({ type: 'varchar', nullable: true })
-  public avatar: string;
+  @JoinColumn({ name: 'owner_id' })
+  @ManyToOne(() => User)
+  owner: User;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
   public createdAt!: Date;
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   public updatedAt!: Date;
+
+  @DeleteDateColumn({ type: 'timestamp', nullable: true, name: 'deleted_at' })
+  public deletedAt!: Date;
 
   constructor() {
     if (!this.id) {
@@ -43,4 +45,4 @@ class User {
   }
 }
 
-export { User };
+export { Workspace };
