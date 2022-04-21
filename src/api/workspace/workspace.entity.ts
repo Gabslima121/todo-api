@@ -22,6 +22,9 @@ class Workspace {
   @Column({ type: 'varchar', length: 120 })
   public description: string;
 
+  @Column({ type: 'boolean', default: false, name: 'is_public' })
+  public isPublic: boolean;
+
   @Column({ type: 'varchar', name: 'owner_id' })
   public ownerId: string;
 
