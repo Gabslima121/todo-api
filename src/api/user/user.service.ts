@@ -27,33 +27,6 @@ class UserService {
   @InjectRepository(User)
   private readonly userRepository: Repository<User>;
 
-  public async login({ email, password }: IAuthenticateService) {
-    const user = await this.getUserByEmail(email);
-
-    const passwordMarch = await compare(password, user.password);
-
-    if (!user || !passwordMarch) {
-      throw new Error('Email/Password Incorrect');
-    }
-
-    const token = sign({}, process.env.JWT_SECRET, {
-      subject: user.id,
-      expiresIn: '1d',
-    });
-
-    const returnToken: IResponse = {
-      token,
-      user: {
-        name: user.name,
-        role: user.role,
-        email: user.email,
-        isDelete: user.isDeleted,
-      },
-    };
-
-    return returnToken;
-  }
-
   public getUserById(id: string): Promise<User> {
     return this.userRepository.findOne({
       where: { id },

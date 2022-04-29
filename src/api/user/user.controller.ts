@@ -47,13 +47,4 @@ export class UserController {
   public getAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers();
   }
-
-  @Post('/login')
-  public async login(@Body() { email, password }: ICreateUserDto) {
-    try {
-      return await this.userService.login({ email, password });
-    } catch (e) {
-      return e.message;
-    }
-  }
 }
