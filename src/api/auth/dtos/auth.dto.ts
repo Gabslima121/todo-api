@@ -17,3 +17,10 @@ export interface UserPayload {
 export interface UserToken {
   accessToken: string;
 }
+
+export interface UserFromJwt {
+  id: string;
+  email: string;
+  role: string;
+  isDeleted: boolean;
+}

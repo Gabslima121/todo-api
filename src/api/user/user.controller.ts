@@ -7,6 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { IsPublic } from '../auth/decorators/is-public.decorator';
 import { ICreateUserDto } from './user.dto';
 
 import { User } from './user.entity';
