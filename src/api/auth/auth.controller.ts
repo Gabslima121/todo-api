@@ -12,7 +12,7 @@ import { IsPublic } from './decorators/is-public.decorator';
 import { AuthRequest } from './dtos/auth.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

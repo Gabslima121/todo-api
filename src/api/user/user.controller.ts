@@ -7,7 +7,7 @@ import {
   Param,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { IsPublic } from '../auth/decorators/is-public.decorator';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { ICreateUserDto } from './user.dto';
 
 import { User } from './user.entity';
@@ -17,6 +17,11 @@ import { UserService } from './user.service';
 export class UserController {
   @Inject(UserService)
   private readonly userService: UserService;
+
+  @Get('/me')
+  public getMe(@CurrentUser() user: User): User {
+    return user;
+  }
 
   @Get(':id')
   public getUserById(@Param('id', ParseUUIDPipe) id: string): Promise<User> {

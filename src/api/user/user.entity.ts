@@ -10,7 +10,7 @@ import { v4 as uuid } from 'uuid';
 @Entity('users')
 class User {
   @PrimaryColumn()
-  public id!: string;
+  public id?: string;
 
   @Column({ type: 'varchar', length: 120 })
   public name: string;

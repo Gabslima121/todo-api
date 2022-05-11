@@ -1,4 +1,6 @@
+import { IsEmail, IsString } from 'class-validator';
 import { Request } from 'express';
+
 import { User } from 'src/api/user/user.entity';
 
 export interface AuthRequest extends Request {
@@ -23,4 +25,12 @@ export interface UserFromJwt {
   email: string;
   role: string;
   isDeleted: boolean;
+}
+
+export class LoginRequestBody {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  password: string;
 }
